@@ -2,6 +2,6 @@
 
 *  Clone the repo
 *  `cd` into your clone
-*  run ./setup.sh
+*  run `./setup.sh`
 
 
