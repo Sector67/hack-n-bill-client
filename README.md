@@ -7,4 +7,5 @@ This is a really simple client for [hack-n-bill](http://github.com/grantdobbe/ha
 *  Clone this repo
 *  `cd` into your clone
 *  run `./setup.sh`
+*  `cp` local_settings-template.py to local_settings.py
 
