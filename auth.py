@@ -1,21 +1,18 @@
 import requests
 
-from settings import servers
-
-
-master = servers['master']
-master_login = master['login']
-
 
 '''
-Takes nothing, returns a bound requests session object
+
+Takes a dict that describes a server, returns a bound 'requests'
+session object. See local_settings-template.py for example server configs.
+
 '''
-def log_in():
-    login_url = master['url'] + master['login']['uri']
+def log_in(server):
+    login_url = server['url'] + server['login']['uri']
     data = {
-        master_login['username_form_key']: master_login['username'],
-        master_login['password_form_key']: master_login['password'],
-        'form_id': master_login['login_form_id'],
+        server['login']['username_form_key']: server['login']['username'],
+        server['login']['password_form_key']: server['login']['password'],
+        'form_id': server['login']['login_form_id'],
     }
     s = requests.session()
     r = s.post(login_url, data=data)
