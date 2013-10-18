@@ -6,6 +6,7 @@ from settings import servers
 master = servers['master']
 master_login = master['login']
 
+
 '''
 Takes nothing, returns a bound requests session object
 '''
@@ -18,6 +19,6 @@ def log_in():
     }
     s = requests.session()
     r = s.post(login_url, data=data)
-    return r
+    return s
 
 
