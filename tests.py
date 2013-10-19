@@ -23,10 +23,14 @@ def p_fail(text):
     failed.append(text)
     print(Fore.RED + text + Style.RESET_ALL)
 
+def wwn(text):
+    sys.stdout.write(text)
+    sys.stdout.flush()
+
+
 
 def login():
-    sys.stdout.write('Testing login.. ')
-    sys.stdout.flush()
+    wwn('Testing login.. ')
     try:
         r = auth.log_in(settings.servers['master'])
         if not r.verify:
@@ -37,8 +41,7 @@ def login():
         p_fail('Login test failed!')
 
 def get_users():
-    sys.stdout.write('Testing GET users list.. ')
-    sys.stdout.flush()
+    wwn('Testing GET users list.. ')
     try:
         r = actions.get_users(settings.servers['master'])
         if not r.ok:
