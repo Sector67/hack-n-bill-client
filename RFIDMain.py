@@ -4,7 +4,7 @@ import time
 import RPi.GPIO as io
 import select
 
-from HNBC.HNBC.models import RFIDKey
+from HNBC.HNBC.models import RFIDKey, RFIDLog
 
 io.setmode(io.BCM)
 power_pin = 2
@@ -35,6 +35,7 @@ while True:
                 continue # Possibly bad juju or mucked up database
 
             if key and user.is_active:
+                RFIDLog(key=key).save()
                 print("POWER ON")
                 io.output(power_pin, True)
                 turnoff = datetime.datetime.now() + datetime.timedelta(0,10)
