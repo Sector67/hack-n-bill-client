@@ -1,31 +1,20 @@
-import requests
-import json
 import datetime
-import RFIDDataAccess
-import SectorAdminSite
 import sys
-import time 
-import datetime 
-import RPi.GPIO as io 
+import time
+import RPi.GPIO as io
 import select
 
-io.setmode(io.BCM) 
+from HNBC.HNBC.models import RFIDKey
+
+io.setmode(io.BCM)
 power_pin = 2
 pir_pin = 24
-io.setup(pir_pin, io.IN) 
+io.setup(pir_pin, io.IN)
 io.setup(power_pin, io.OUT)
 io.output(power_pin, False)
 
-access = RFIDDataAccess.DataAccess()
-access.DeleteAllAuthorizedUsers()
 
-authService = SectorAdminSite.SectorAdmin()
-data = authService.GetAuthorizedUsers(1)
-
-for user in data:
-    access.InsertAuthorizedUser(user['field_rfid_tag_value'],user['uid'],user['name'])
-
-turnoff = datetime.datetime.now()    
+turnoff = datetime.datetime.now()
 
 while True:
 
@@ -35,12 +24,22 @@ while True:
         if rfid:
             rfid = ''.join(rfid.splitlines())
             print(rfid)
-            if access.IsRFIDAuthorized(rfid):
+
+            try:
+                # Verify that there is a key, and that the user is active
+                key = RFIDKey.objects.get(code='asdf', user__isnull=False)
+                user = key.user
+            except RFIDKey.DoesNotExist:
+                continue # Key isn't in database
+            except RFIDKey.MultipleObjectsReturned:
+                continue # Possibly bad juju or mucked up database
+
+            if key and user.is_active:
                 print("POWER ON")
                 io.output(power_pin, True)
                 turnoff = datetime.datetime.now() + datetime.timedelta(0,10)
 
+    if turnoff < datetime.datetime.now():
+        io.output(power_pin, False)
 
-    if turnoff < datetime.datetime.now():            
-        io.output(power_pin, False)         
     time.sleep(.25)
