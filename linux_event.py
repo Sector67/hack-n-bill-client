@@ -42,16 +42,16 @@ def get_bits(f, o=0):
     a = fcntl.ioctl(f, SZ(EVIOCGBIT+EV[o], sz), '\0' * ((sz+7)/8))
     ret = set()
     for j, ch in enumerate(a):
-    ch = ord(ch)
-    for i in range(8):
-        b = 1<<i
-        if ch & b:
-        k = j*8+i
-        if k not in fmap:
-            name = "%s_%d" % (prefix, k)
-            fmap[k] = name
-            rmap[name] = k
-        ret.add(fmap[k])
+        ch = ord(ch)
+        for i in range(8):
+            b = 1<<i
+            if ch & b:
+            k = j*8+i
+            if k not in fmap:
+                name = "%s_%d" % (prefix, k)
+                fmap[k] = name
+                rmap[name] = k
+            ret.add(fmap[k])
     return ret
 
 def get_keys(f):
